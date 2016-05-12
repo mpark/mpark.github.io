@@ -1,0 +1,10 @@
+# Site navigation links
+
+- title: About
+  url: /about/
+
+- title: Programming
+  url: /programming/
+
+- title: Search
+  url: /search/

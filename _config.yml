@@ -1,0 +1,75 @@
+title: Michael Park
+locale: en-US
+description: from Shower Thoughts to Ruminations
+url: https://mpark.github.io
+baseurl: ""
+logo: /images/profile.jpg
+
+remote_theme: mmistakes/so-simple-theme@0128355ab62c20740a17775ee1df5382db472cb3
+google_fonts:
+  - name: Source Sans Pro
+    weights: "400,400i,700,700i"
+  - name: Lora
+    weights: "400,400i,700,700i"
+mathjax:
+  enable: true
+twitter:
+  username: mcypark
+author:
+  name: Michael Park
+  email: mcypark@gmail.com
+  twitter: mcypark
+
+# Preserve existing post URLs and feed subscribers.
+permalink: pretty
+feed:
+  path: feed.xml
+tag_archive_path: "/tags/#"
+
+kramdown:
+  toc_levels: 1..2
+sass:
+  style: compressed
+liquid:
+  error_mode: strict
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+
+defaults:
+  - scope:
+      path: "_posts"
+      type: posts
+    values:
+      layout: post
+      share: false
+
+footer_links:
+  - title: Feed
+    url: /feed.xml
+    icon: fas fa-rss-square
+  - title: Twitter
+    url: https://twitter.com/mcypark
+    icon: fab fa-twitter-square
+  - title: Facebook
+    url: https://facebook.com/mcypark
+    icon: fab fa-facebook-square
+  - title: LinkedIn
+    url: https://linkedin.com/in/mcypark
+    icon: fab fa-linkedin
+  - title: StackExchange
+    url: https://stackoverflow.com/users/2968284/mpark
+    icon: fab fa-stack-exchange
+  - title: GitHub
+    url: https://github.com/mpark
+    icon: fab fa-github-square
+
+# Exclude local build dependencies and documentation from GitHub Pages.
+exclude:
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENSE
