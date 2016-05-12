@@ -5,7 +5,7 @@ locale: en_US
 description: from Shower Thoughts to Ruminations
 logo: profile.jpg
 search: true
-url: http://localhost:4000
+url: https://mpark.github.io
 
 # Jekyll configuration
 
