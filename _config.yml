@@ -24,6 +24,7 @@ author:
 permalink: pretty
 feed:
   path: feed.xml
+  posts_limit: 20
 tag_archive_path: "/tags/#"
 
 kramdown:

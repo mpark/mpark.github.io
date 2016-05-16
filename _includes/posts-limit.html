@@ -1,0 +1,6 @@
+{% assign posts_limit = page.posts_limit | default: 10 %}
+{% assign posts = site.posts | where_exp: 'post', 'post.draft != true' %}
+
+{%- for entry in posts limit: posts_limit -%}
+  {% include entry.html %}
+{%- endfor -%}
