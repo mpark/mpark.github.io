@@ -7,7 +7,6 @@ excerpt: "Do you know how to read/write `typedef` properly?"
 tags: [c++, typedef, type-alias]
 date: 2016-05-12
 share: true
-draft: true
 ---
 
 __NOTE__: If you're writing ≥ C++11, reach for [type alias] rather than
@@ -16,15 +15,15 @@ it also supports templated type aliases (i.e. [alias template][type alias]).
 
 ## Introduction
 
-The typedef declaration provides a way to declare an alias for an existing
+The typedef declaration provides a way to create an alias for an existing
 type. For example, we can provide an alias for `int` called `integer` like so:
 
 ```c++
 typedef int integer;
 ```
 
-I imagine most people have seen such declarations, and it is fairly simple to
-read.  In fact it's so simple that we may incorrectly conclude that the syntax
+I imagine most people have seen such declarations, and they are fairly simple to
+read. In fact it's so simple that we may incorrectly conclude that the syntax
 for `typedef` is:
 
 ```c++
@@ -32,7 +31,7 @@ typedef <existing_type> <new_type_name>;
 ```
 
 This syntax works for simple cases, but at some point we encounter a typedef
-declaration that doesn't quite meet our expectation:
+declaration that doesn't quite meet our expectations:
 
 ```c++
 typedef int (*function_pointer)(double);
@@ -59,7 +58,7 @@ Fine! Yet another special case. But what about...
 typedef int integer, (*function_pointer)(double), array[3];
 ```
 
-Huh...? Is this even legal? --- Yes. Yes it is. (I'm not saying do it...)
+Huh...? Is this even legal? --- Yes. Yes it is. --- __NOT__ suggesting that you this!
 
 Seriously, how do we read these damn things?
 
@@ -96,8 +95,8 @@ int (*f)(double);  // `f` is an instance of `int (*)(double)`.
 int a[3];          // `a` is an instance of `int [3]`.
 ```
 
-When the `typedef` keyword precedes the declaration, the introduced names are
-__aliases__ of the corresponding types.
+However, when the `typedef` keyword precedes the declaration, the introduced
+names are __aliases__ of the corresponding types.
 
 ```c++
 typedef int i;             // `i` is an alias of `int`.
@@ -106,7 +105,7 @@ typedef int a[3];          // `a` is an alias of `int [3]`.
 ```
 
 Thus, the task of reading a typedef declaration can be delegated to a reading
-a variable declaration then reinterpreting the names to be __aliases__ of the
+of a variable declaration then reinterpreting the names to be __aliases__ of the
 corresponding types as opposed to __instances__ of them!
 
 ## Inaccurate Sources
@@ -114,7 +113,7 @@ corresponding types as opposed to __instances__ of them!
 Unfortunately, the source of the misunderstanding goes beyond us naively
 assuming the simple syntax.
 
-- [Wikipedia article] enumerates a bunch of scenarios. It makess it seem as
+- [Wikipedia article] enumerates a bunch of scenarios. It makes it seem as
   if there is a special case for function pointers, for example.
 
 > Function pointers are somewhat different than all other types because the
@@ -138,14 +137,14 @@ Hopefully I've helped you understand how typedef declarations actually work.
 As I mentioned at the beginning of the post, reach for [type alias] instead if
 you're writing modern C++.
 
-It's interesting to me that even though the typedef declaration successfully
-achieves the "make simple things simple" principle, the rule that one would
-naturally deduce from the simple cases do not prepare you for the complex cases
-at all.
+As we've seen in the earlier examples, the design of typedef declaration
+successfully achieves the "make simple things simple" principle. However, the
+generalized rule that one would naturally deduce from the simple cases do not
+prepare you for the complex cases at all.
 
 I've also shown that the underlying rule is actually quite simple and
-consistent. The level of confusion that arise from such a coherent design that
-even managed to keep the simple cases simple, is quite intriguing.
+consistent. The level of confusion that arise from what seems like such a
+coherent and simple design is quite intriguing.
 
 ## Standardese
 
