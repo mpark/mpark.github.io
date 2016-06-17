@@ -205,7 +205,12 @@ $$
   type. A _typedef-name_ does not introduce a new type the way a class
   declaration (9.1) or enum declaration does. [...]
 
+Thanks to [Artem Harutyunyan] and [Kapil Arya] for reviewing this post!
+
 [type alias]: http://en.cppreference.com/w/cpp/language/type_alias
 [cppreference]: http://en.cppreference.com/w/cpp/language/typedef
 [Wikipedia article]: https://en.wikipedia.org/wiki/Typedef
 [Cplusplus tutorial]: http://www.cplusplus.com/doc/tutorial/other_data_types/
+[Artem Harutyunyan]: https://github.com/artemharutyunyan
+[Kapil Arya]: http://www.ccs.neu.edu/home/kapil/
+
