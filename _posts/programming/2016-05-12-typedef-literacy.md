@@ -58,7 +58,8 @@ Fine! Yet another special case. But what about...
 typedef int integer, (*function_pointer)(double), array[3];
 ```
 
-Huh...? Is this even legal? --- Yes. Yes it is. --- __NOT__ suggesting that you this!
+Huh...? Is this even legal? --- Yes. Yes it is. ---
+I'm __NOT__ suggesting that you do this!
 
 Seriously, how do we read these damn things?
 
