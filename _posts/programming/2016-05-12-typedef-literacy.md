@@ -105,8 +105,8 @@ typedef int (*f)(double);  // `f` is an alias of `int (*)(double)`.
 typedef int a[3];          // `a` is an alias of `int [3]`.
 ```
 
-Thus, the task of reading a typedef declaration can be delegated to a reading
-of a variable declaration then reinterpreting the names to be __aliases__ of the
+Thus, the task of reading a typedef declaration can be delegated to reading a
+variable declaration then reinterpreting the names to be __aliases__ of the
 corresponding types as opposed to __instances__ of them!
 
 ## Inaccurate Sources
