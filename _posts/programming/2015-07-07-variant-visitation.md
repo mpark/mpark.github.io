@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Variant Visitation"
-excerpt: "A visitation mechanism for `std::experimental::variant`."
+excerpt: "A visitation mechanism for `std::variant`."
 modified: 2016-05-11
 categories: programming
 tags: [c++, variant, visitation]
@@ -26,7 +26,7 @@ of reference throughout the post. We only need the following:
 
   * `v.index()`: Returns the __index__ of the currently stored value.
   * `get<I>(v)`: Returns the currently stored value if `v.index() == I` else
-                 throws `std::experimental::bad_variant_access`.
+                 throws `std::bad_variant_access`.
 
 ## Visitation
 
@@ -228,8 +228,7 @@ template <typename F, typename... Vs>
 constexpr auto make_fmatrix() {
   return make_fmatrix_impl<F, Vs...>(
       std::index_sequence<>{},
-      std::make_index_sequence<
-          std::experimental::tuple_size<std::decay_t<Vs>>::value>{}...);
+      std::make_index_sequence<std::tuple_size<std::decay_t<Vs>>::value>{}...);
 }
 ```
 
@@ -311,7 +310,7 @@ __NOTE__: It's actually a little more complicated than this because duplicate
 types in a `variant` have distinct states. We therefore need to initialize the
 alternative in `this` at the same index as the one stored in `that`.
 
-The full reference implementation of `std::experimental::variant` can be
+The full reference implementation of `std::variant` can be
 found [here](https://github.com/mpark/variant).
 
 Thanks to [Agustín "K-ballo" Bergé] for reviewing this post!
