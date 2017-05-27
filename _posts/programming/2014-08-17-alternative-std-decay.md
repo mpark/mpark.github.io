@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Alternative `std::decay`"
-excerpt: "A simpler definition and implementation of `std::decay`."
+title: "Alternative std::decay Implementation"
+excerpt: "A simpler definition and implementation of std::decay."
 modified: 2016-05-11
 categories: programming
 tags: [c++, std-decay]
