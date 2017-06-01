@@ -7,7 +7,6 @@ excerpt: "Can we work around the limitations of non-type template parameters?"
 tags: [c++, constexpr, parameters, metaprogramming]
 date: 2017-05-26
 share: true
-draft: true
 ---
 
 __NOTE__: Welp, this post is about 3 years late. But... it still seems to come
