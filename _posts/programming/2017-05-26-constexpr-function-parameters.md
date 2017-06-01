@@ -223,8 +223,8 @@ I've used this technique for __[mpark/format]__ which is an experimental string
 format library where the format string is parsed and checked at compile-time.
 
 This technique is also used in __[Boost.Hana]__ to implement
-[`BOOST_HANA_STRING`][hana-string] which was a result of a conversation
-[Louis Dionne] and I had during our first meeting back in CppCon 2014!
+[`BOOST_HANA_STRING`][hana-string] which resulted from my conversation
+with [Louis Dionne] during our first meeting back in CppCon 2014!
 
 I'd love to hear about your use cases if you find this useful!
 
