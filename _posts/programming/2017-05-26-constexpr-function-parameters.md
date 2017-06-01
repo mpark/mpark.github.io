@@ -134,14 +134,20 @@ int main() {
 }
 ```
 
-## Macros
+## Macros (< C++17)
 
 I don't like macros either. But at least this is a pretty simple one.
 
 ```c++
 #define CONSTANT(...) \
-  struct { static constexpr auto value() { return __VA_ARGS__; } }
+  union { static constexpr auto value() { return __VA_ARGS__; } }
 ```
+
+> __NOTE__: Shout-out to [@lichray] for pointing out that anonymous `struct` is
+> not part of the C++ standard in this [tweet]!
+
+[@lichray]: https://twitter.com/lichray
+[tweet]: https://twitter.com/lichray/status/870376890611056640
 
 The above example can then be written like this:
 
@@ -230,6 +236,23 @@ int main() {
 This technique is also used in __[Boost.Hana]__ to implement
 [`BOOST_HANA_STRING`][hana-string] which came out of a conversation
 with [Louis Dionne] during our first meeting back in CppCon 2014 😊
+
+## C++17
+
+Since we have `constexpr` lambdas in C++17, we can ditch the macros from above
+and pass around the lambdas directly. For example,
+
+```c++
+template <typename X>
+constexpr void f(X x) {
+  static_assert(std::get<0>(x()) == 101, "");
+  static_assert(std::get<1>(x()) == 202, "");
+}
+
+int main() {
+  f([] { return std::make_tuple(101, 202); });
+}
+```
 
 ## Final Remarks
 
