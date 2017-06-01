@@ -32,9 +32,9 @@ constexpr void f(std::size_t n) {
 }
 ```
 
-This function is not allowed because `n`  __could__ be runtime value, in which
-case it would violate the requirement that `static_assert` expects a constant
-expression.
+This function is not allowed because `n`  __could__ be a runtime value, in which
+case it would violate the requirement that `static_assert` must be given
+a constant expression.
 
 [constexpr]: http://en.cppreference.com/w/cpp/language/constexpr
 
@@ -61,11 +61,23 @@ constexpr void f() {
 }
 ```
 
-Well, this doesn't work because we're not allowed to pass an arbitrary literal
-type as a non-type template parameter.
+This doesn't work because we're not allowed to pass an arbitrary literal type as
+a non-type template parameter.
 
 > [N3413][N3413] proposes to allow arbitrary literal types for non-type template
-> paramters.
+> parameters.
+
+Why does this restriction on non-type template parameters exist in the first
+place?
+
+Since C++ has a fundamental notion of "same type", given values `x` and
+`y`, we have to be able to answer whether `foo<x>` and `foo<y>` are the same
+type. Currently, the non-type template parameters are restricted such that this
+question can be answered using the built-in value equality comparison.
+Once user-defined literal types are involved, we have to be able to find a
+unique `operator==` across translation units to perform equality comparisons,
+and also mangle the same types to the same name. This potentially introduces
+a lot of complexity into the linker.
 
 Can we get around this limitation?
 
@@ -86,14 +98,17 @@ inside the type without the value being __part__ of the type.
 Okay, I admit that may be a bit confusing. Here is the code:
 
 ```c++
-struct  {
+struct S {
   static constexpr auto value() { return std::make_tuple(101, 202); }
 };
 ```
 
-Here, we've created a type `S` that encodes the value without the value actually
-being part of the type. The `tuple(101, 202)` above is not _really_ part of the
-type `S`, but it __is__ encoded in it.
+Here, we've created a type `S` that encodes the value
+`std::make_tuple(101, 202)` without the value actually being part of the
+type. The `tuple(101, 202)` is not _really_ part of the type `S`, but
+we can extract the value from `S` (via `S::value()`). The compiler therefore
+must somehow associate the value with the type, which I consider to be a
+valid encoding.
 
 We can then pass it into a function and use it like this:
 
@@ -191,8 +206,8 @@ auto y = CONSTANT_VALUE(42);
 static_assert(std::is_same<decltype(x), decltype(y)>::value, "");  // fail!
 ```
 
-But... this is kind of like how lambdas work. Specifically, lambdas that happen
-to be lexically equivalent don't have the same type.
+But... this is actually similar to how lambdas work. Specifically, lambdas
+that happen to be lexically equivalent don't have the same type.
 
 ```c++
 auto x = [] {};
@@ -205,10 +220,18 @@ It seems that "having too many types" may not be an issue.
 
 ## Final Remarks
 
-So far I've only used this technique for __[mpark/format]__ which is an
-experimental string format library where the format string is parsed and
-checked at compile-time.
+I've used this technique for __[mpark/format]__ which is an experimental string
+format library where the format string is parsed and checked at compile-time.
+
+This technique is also used in __[Boost.Hana]__ to implement
+[`BOOST_HANA_STRING`][hana-string] which was a result of a conversation
+[Louis Dionne] and I had during our first meeting back in CppCon 2014!
 
 I'd love to hear about your use cases if you find this useful!
 
+Thanks to [Louis Dionne] for reviewing this post!
+
 [mpark/format]: https://github.com/mpark/format
+[Boost.Hana]: http://boostorg.github.io/hana
+[hana-string]: https://github.com/boostorg/hana/blob/cae3fb3fb3f3f1d88a89fe88c3f15e6261a4fd3e/include/boost/hana/string.hpp#L101-L107
+[Louis Dionne]: https://github.com/ldionne
