@@ -69,14 +69,22 @@ a non-type template parameter.
 Why does this restriction on non-type template parameters exist in the first
 place?
 
-Since C++ has a fundamental notion of "same type", given values `x` and
-`y`, we have to be able to answer whether `foo<x>` and `foo<y>` are the same
-type. Currently, the non-type template parameters are restricted such that this
+For one, C++ has a fundamental notion of "same type". Given values `x` and `y`,
+we have to be able to answer whether `foo<x>` and `foo<y>` are the same type.
+Currently, the non-type template parameters are restricted such that this
 question can be answered using the built-in value equality comparison.
 Once user-defined literal types are involved, we have to be able to find a
 unique `operator==` across translation units to perform equality comparisons,
 and also mangle the same types to the same name. This potentially introduces
 a lot of complexity into the linker.
+
+> __NOTE__: This doesn't cover the entirety of the issue since "same type"
+> doesn't cover function templates. For example, given the function template `f`
+> above, `f<std::make_tuple(101, 202)>` and `f<std::make_tuple(23, 24)>` both
+> have the type `void ()`. Thanks [tcanens] for the [reddit comment]!
+
+[tcanens]: https://www.reddit.com/user/tcanens
+[reddit comment]: https://www.reddit.com/r/cpp/comments/6en2ok/constexpr_function_parameters/dibmnty/
 
 Can we get around this limitation?
 
@@ -172,6 +180,30 @@ int main() {
 }
 ```
 
+Note that this macro introduces a new type for every value. We're essentially
+"solving" the problem of performing equality comparison of literal types by
+punting it entirely and saying "they're never equal". For example,
+
+```c++
+auto x = CONSTANT_VALUE(42);
+auto y = CONSTANT_VALUE(42);
+
+static_assert(std::is_same<decltype(x), decltype(y)>::value, "");  // fail!
+```
+
+Initially, I was concerned about the potential of introducing too many types.
+But this is actually similar to how lambdas work. Specifically, lambdas
+that happen to be lexically equivalent don't have the same type.
+
+```c++
+auto x = [] {};
+auto y = [] {};
+
+static_assert(std::is_same<decltype(x), decltype(y)>::value, "");  // fail!
+```
+
+It seems that "having too many types" may not be an issue.
+
 ## Compile-Time String
 
 Compile-time strings in the context of static reflection and metaprogramming are
@@ -195,36 +227,14 @@ int main() {
 }
 ```
 
-Initially, I was concerned about the fact that the types will be different
-even if the values are the same. For example:
-
-```c++
-auto x = CONSTANT_VALUE(42);
-auto y = CONSTANT_VALUE(42);
-
-static_assert(std::is_same<decltype(x), decltype(y)>::value, "");  // fail!
-```
-
-But... this is actually similar to how lambdas work. Specifically, lambdas
-that happen to be lexically equivalent don't have the same type.
-
-```c++
-auto x = [] {};
-auto y = [] {};
-
-static_assert(std::is_same<decltype(x), decltype(y)>::value, "");  // fail!
-```
-
-It seems that "having too many types" may not be an issue.
+This technique is also used in __[Boost.Hana]__ to implement
+[`BOOST_HANA_STRING`][hana-string] which came out of a conversation
+with [Louis Dionne] during our first meeting back in CppCon 2014 😊
 
 ## Final Remarks
 
 I've used this technique for __[mpark/format]__ which is an experimental string
 format library where the format string is parsed and checked at compile-time.
-
-This technique is also used in __[Boost.Hana]__ to implement
-[`BOOST_HANA_STRING`][hana-string] which resulted from my conversation
-with [Louis Dionne] during our first meeting back in CppCon 2014!
 
 I'd love to hear about your use cases if you find this useful!
 
