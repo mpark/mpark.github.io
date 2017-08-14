@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "constexpr function parameters"
+title: "`constexpr` function parameters"
 modified:
 categories: programming
 excerpt: "Can we work around the limitations of non-type template parameters?"
