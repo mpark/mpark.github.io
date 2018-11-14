@@ -217,6 +217,6 @@ framework and setting a precedent with [metaben.ch]!
 [GCC 5 results]: https://mpark.github.io/variant/compile_time/gcc-5/ctor.fwd/index.html
 [Agustín "K-ballo" Bergé]: https://github.com/K-ballo
 [metabench]: https://github.com/ldionne/metabench
-[metaben.ch]: metaben.ch
+[metaben.ch]: http://metaben.ch
 [Louis Dionne]: https://github.com/ldionne
 [Bruno Dutra]: https://github.com/brunocodutra
