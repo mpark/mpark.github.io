@@ -6,7 +6,6 @@ categories: programming
 excerpt: "An anecdote about surprising implementation challenges of `FUN`."
 tags: [c++, variant, using-declaration, FUN, gcc]
 date: 2017-08-08
-share: true
 ---
 
 > An anecdote from benchmarking the compile time of [mpark/variant],

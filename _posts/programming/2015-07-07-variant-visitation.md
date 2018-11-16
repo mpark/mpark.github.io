@@ -5,7 +5,6 @@ excerpt: "A visitation mechanism for `std::variant`."
 modified: 2016-05-11
 categories: programming
 tags: [c++, variant, visitation]
-share: true
 ---
 
 ## Introduction

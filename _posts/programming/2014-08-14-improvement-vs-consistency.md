@@ -5,7 +5,6 @@ excerpt: "Is it better to partially improve at the cost of inconsistency?"
 modified: 2016-05-11
 categories: programming
 tags: [c++, lambda, mutable]
-share: true
 ---
 
 The _lambda expression_ is one of my favorite C++11 features next to

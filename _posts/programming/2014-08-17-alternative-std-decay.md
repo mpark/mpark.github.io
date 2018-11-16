@@ -5,7 +5,6 @@ excerpt: "A simpler definition and implementation of `std::decay`."
 modified: 2016-05-11
 categories: programming
 tags: [c++, std-decay]
-share: true
 ---
 
 > UPDATE: My concern discussed here has been answered on [Stackoverflow].

@@ -5,7 +5,6 @@ excerpt: "How to make proxy objects harder to use incorrectly."
 modified: 2016-05-11
 categories: programming
 tags: [c++, proxy]
-share: true
 ---
 
 ## Introduction

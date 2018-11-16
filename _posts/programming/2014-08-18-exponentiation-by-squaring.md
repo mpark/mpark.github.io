@@ -5,7 +5,6 @@ excerpt: "Exploring a faster exponentiation algorithm."
 modified: 2016-05-11
 categories: programming
 tags: [algorithm, exponentiation]
-share: true
 ---
 
 In this post, I want to talk about a fast exponentiation algorithm that

@@ -5,7 +5,6 @@ excerpt: "The pitfall of eagerness of perfect forwarding."
 modified: 2016-05-07
 categories: programming
 tags: [c++, perfect-forwarding, constructor, accurate-characterization]
-share: true
 ---
 
 ## The Problem

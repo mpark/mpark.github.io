@@ -6,7 +6,6 @@ categories: programming
 excerpt: "Do you know how to read/write `typedef` properly?"
 tags: [c++, typedef, type-alias]
 date: 2016-05-12
-share: true
 ---
 
 __NOTE__: If you're writing ≥ C++11, reach for [type alias] rather than
