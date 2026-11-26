@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!--
+    So Simple Jekyll Theme 3.2.0
+    Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+    Free for personal and commercial use under the MIT license
+    https://github.com/mmistakes/so-simple-theme/blob/master/LICENSE
+-->
+<html lang="{{ page.lang | default: site.lang | default: 'en-US' }}" class="no-js">
+  {% assign theme_revision = site.remote_theme | split: '@' | last %}
+  {% assign main_css = '/assets/css/main.css' | relative_url %}
+  {% assign skin_css = site.skin | default: '/assets/css/skins/default.css' | relative_url %}
+  {% assign main_css_versioned = main_css | append: '?v=' | append: theme_revision %}
+  {% assign skin_css_versioned = skin_css | append: '?v=' | append: theme_revision %}
+  {% capture theme_head %}{% include head.html %}{% endcapture %}
+  {{ theme_head | replace: main_css, main_css_versioned | replace: skin_css, skin_css_versioned }}
+
+  <body class="layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %} {% if page.entries_layout == 'grid' %}page--wide{% endif %} {{ page.title | slugify }}">
+    {% include skip-links.html %}
+    {% include navigation.html %}
+    {% include masthead.html %}
+
+    {{ content }}
+
+    {% include footer.html %}
+    {% assign main_js = '/assets/js/main.min.js' | relative_url %}
+    {% assign main_js_versioned = main_js | append: '?v=' | append: theme_revision %}
+    {% capture theme_scripts %}{% include scripts.html %}{% endcapture %}
+    {{ theme_scripts | replace: main_js, main_js_versioned }}
+  </body>
+
+</html>

@@ -41,6 +41,8 @@ upstream implementations; there is no separate JSON search or custom Atom feed.
 The template changes relative to upstream are favicon links in
 `_includes/head-custom.html` and public-draft filtering in
 `_includes/posts-limit.html` and `_includes/posts-category.html`.
+The local `_layouts/default.html` adds the pinned theme revision to the CSS and
+JavaScript URLs so cached files from older theme versions do not break the layout.
 To update the theme, change the revision in `remote_theme` in `_config.yml`, then
 build and check the site. Theme updates no longer require rebasing the site.
 See the [upstream documentation](https://github.com/mmistakes/so-simple-theme#readme)
