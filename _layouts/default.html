@@ -12,9 +12,13 @@
   {% assign main_css_versioned = main_css | append: '?v=' | append: theme_revision %}
   {% assign skin_css_versioned = skin_css | append: '?v=' | append: theme_revision %}
   {% capture theme_head %}{% include head.html %}{% endcapture %}
+  {% if page.draft %}{% assign theme_head = theme_head | replace: '<title>', '<title>[Draft] ' %}{% endif %}
   {{ theme_head | replace: main_css, main_css_versioned | replace: skin_css, skin_css_versioned }}
 
   <body class="layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %} {% if page.entries_layout == 'grid' %}page--wide{% endif %} {{ page.title | slugify }}">
+    {% if page.draft %}
+      <div class="draft-ribbon"><span class="draft-badge">Draft</span></div>
+    {% endif %}
     {% include skip-links.html %}
     {% include navigation.html %}
     {% include masthead.html %}
