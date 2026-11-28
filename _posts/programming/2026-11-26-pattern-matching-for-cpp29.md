@@ -46,9 +46,9 @@ to give pattern matching a bit of a rest, and be fully present with my family.
 
 Almost 1.5 years later, I submitted [P2688R6] in Sept 2026. It still offers
 **pattern composition**, as I consider it to be an absolute non-negotiable for
-pattern matching. However, it challenged many aspects of R5. For example, R6
-uses existing declaration syntax to introduce new names instead of `let`,
-replaces infix `match` with a prefix context-sensitive `match`
+pattern matching. However, it challenged a lot of decisions made in R5.
+For example, R6 uses existing declaration syntax to introduce new names instead
+of `let`, replaces infix `match` with a prefix context-sensitive `match`
 (e.g. `match (x) { ... }`), and includes exhaustiveness checking.
 
 I was absolutely stoked to present this in Búzios. Silly me, I thought we were
@@ -64,11 +64,11 @@ in this post.
 # A Tour of [P2688R6]
 
 [2.1 Using Pattern Matching]: https://wg21.link/p2688r6#using-pattern-matching
-[2.2 Customizating an Alternative Type]: https://wg21.link/p2688r6#customizing-an-alternative-type
+[2.2 Customizing an Alternative Type]: https://wg21.link/p2688r6#customizing-an-alternative-type
 
 We'll focus on user-side examples here, from [2.1 Using Pattern Matching].
 For a library-side example, please refer to
-[2.2 Customizating an Alternative Type].
+[2.2 Customizing an Alternative Type].
 
 The implementation of the proposal is available on [Compiler Explorer](https://godbolt.org)
 under `x86-64 clang (pattern matching - P2688)`. The examples from this section
@@ -93,7 +93,7 @@ int value_in_cents(Coin coin) {
 }
 ```
 
-This is a `match` expression, so the expression in the selected handler provides
+This is a `match` *expression*, so the *expression* in the selected handler provides
 its value. A *value pattern* such as `Coin::Penny` matches if the subject has
 the same value. Exhaustiveness checking is required in general. For an `enum`,
 every enumerator value is required to be covered. Therefore, omitting
@@ -118,7 +118,7 @@ void take_turn() {
 }
 ```
 
-This is a `match` statement, so the statement in the selected handler is
+This is a `match` *statement*, so the *statement* in the selected handler is
 executed. `dice_roll()` is evaluated exactly once. The *declaration pattern*
 (`int roll`) matches every other result and initializes `roll` from it.
 
@@ -155,13 +155,12 @@ Suppose now that we roll two dice and return them as a `std::pair`:
 ```cpp
 std::pair<int, int> roll_two_dice();
 
+static constexpr int six = 6;
+
 match (roll_two_dice()) {
   case [1, 1] => snake_eyes();
   //   ^^^^^^  decomposition pattern
-  case [6, 6] => boxcars();
-  case [int r1, int r2] if (r1 == r2) => {
-    play_doubles(r1);
-  }
+  case [six, int r2] => boxcars(r2);
   case [int r1, int r2] => {
     move_player(r1 + r2);
   }
@@ -169,33 +168,51 @@ match (roll_two_dice()) {
 ```
 
 `[P1, P2]` is a *decomposition pattern*. It recursively matches the two
-elements.
+elements. The `[1, 1]` pattern matches if both elements are `1`.
+The `six` in pattern `[six, int r2]` is a nested *value pattern* that refers to
+the existing variable, and `int r2` is a nested *declaration pattern*
+that is initialized with the second element. The `[int r1, int r2]` pattern
+binds both elements to the nested declaration patterns.
 
-> *Note 1*: These can be mixed of course, like `case [6, int r2]` or `case [six, int r2]`.
+> *Note*: In this example, we could also use structured bindings and write
+> `case auto [r1, r2]` instead of `case [int r1, int r2]`. However, also note
+> that `case [six, int r2]` is **not** expressible with structured bindings.
 
-> *Note 2*: In this example, we could also use structured bindings and
-> write `case auto [r1, r2]` instead of `case [int r1, int r2]`.
-
-After a pattern matches, if there is an `if` guard present,
-the handler is taken if the guard evaluates to `true`. Otherwise,
-the next match case is considered.
-
-Alternatively, a `match` can match two separately produced values directly:
+After a pattern matches, if there is an `if` guard present, the handler is taken
+if the guard evaluates to `true`. Otherwise, the next match case is considered.
+For example, let's say rather than `[1, 1]` specifically, we want to handle all
+pairs where the two elements are the same (including `[6, 6]`). We can write:
 
 ```cpp
-match (dice_roll(), dice_roll()) {
-  case [1, 1] => snake_eyes();
-  case [6, 6] => boxcars();
-  case [int r1, int r2] if (r1 == r2) => {
-    play_doubles(r1);
-  }
+std::pair<int, int> roll_two_dice();
+
+static constexpr int six = 6;
+
+match (roll_two_dice()) {
+  case [int r1, int r2] if (r1 == r2) => play_doubles(r1);
+  //                    ^^^^^^^^^^^^^ if guard
+  case [six, int r2] => boxcars(r2);
   case [int r1, int r2] => {
     move_player(r1 + r2);
   }
 }
 ```
 
+Alternatively, a `match` can match two separate values directly.
 Multiple subjects form an unnamed type and are matched together.
+
+```cpp
+static constexpr int six = 6;
+
+match (dice_roll(), dice_roll()) {
+  //  ^^^^^^^^^^^^^^^^^^^^^^^^^^ multiple subjects
+  case [int r1, int r2] if (r1 == r2) => play_doubles(r1);
+  case [six, int r2] => boxcars(r2);
+  case [int r1, int r2] => {
+    move_player(r1 + r2);
+  }
+}
+```
 
 Let's shift gears and look at alternative types. Suppose our die may roll off
 the table, and its result therefore is a `std::optional`:
@@ -338,8 +355,8 @@ EWG took the following poll
 >
 > Result: **Consensus**
 
-This is of course, overwhelming support. It is also perfectly aligned with
-overwhelming feedback I've received so far which mainly consist of
+This is, of course, overwhelming support. It is also perfectly aligned with
+the overwhelming feedback I've received so far, which mainly consists of
 "this feels like C++" and "this is a significant improvement".
 
 Folks who were in favor of R5 are even more in favor of R6, and several who were
@@ -352,7 +369,7 @@ the most confident, optimistic, and satisfied I've been with the design.
 
 I plan to bring wording for P2688 to the Istanbul meeting, as well as the
 library companion paper for LEWG. The ambitious goal is to have the proposal
-forwarded to the CWG for C++29. Realistically, it'll need a few more meetings
+forwarded to CWG for C++29. Realistically, it'll need a few more meetings
 to get to that point.
 
 The following is an adapted timeline from [P1000R8]:
